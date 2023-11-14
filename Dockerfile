@@ -1,4 +1,4 @@
-FROM python:3.7 AS signals-classification-web
+FROM python:3.8 AS signals-classification-web
 
 ENV PYTHONUNBUFFERED 1
 
@@ -26,7 +26,7 @@ ENV UWSGI_HARAKIRI 25
 CMD uwsgi
 
 
-FROM python:3.7 AS signals-classification-train
+FROM python:3.8 AS signals-classification-train
 
 ENV PYTHONUNBUFFERED 1
 
