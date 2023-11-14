@@ -1,10 +1,10 @@
-FROM amsterdam/python AS signals-classification-web
+FROM python:3.7 AS signals-classification-web
 
 ENV PYTHONUNBUFFERED 1
 
-EXPOSE 8000
+RUN useradd --no-create-home classification
 
-RUN mkdir -p /static && chown datapunt /static
+RUN mkdir -p /static && chown classification /static
 
 COPY app /app/
 COPY requirements.txt /app/
@@ -14,7 +14,7 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-USER datapunt
+USER classification
 
 ENV UWSGI_HTTP :8000
 ENV UWSGI_MODULE app:application
@@ -26,7 +26,7 @@ ENV UWSGI_HARAKIRI 25
 CMD uwsgi
 
 
-FROM amsterdam/python AS signals-classification-train
+FROM python:3.7 AS signals-classification-train
 
 ENV PYTHONUNBUFFERED 1
 
