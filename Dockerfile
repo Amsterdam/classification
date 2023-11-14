@@ -1,5 +1,4 @@
 FROM amsterdam/python AS signals-classification-web
-MAINTAINER datapunt@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
 
