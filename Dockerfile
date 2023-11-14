@@ -1,16 +1,18 @@
-FROM python:3.8 AS signals-classification-web
+FROM python:3.8 AS signals-classification-base
 
 ENV PYTHONUNBUFFERED 1
 
 RUN useradd --no-create-home classification
 
+WORKDIR /app
+
+
+FROM signals-classification-base AS signals-classification-web
+
 RUN mkdir -p /static && chown classification /static
 
 COPY app /app/
 COPY requirements.txt /app/
-
-WORKDIR /app
-
 
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -26,13 +28,7 @@ ENV UWSGI_HARAKIRI 25
 CMD uwsgi
 
 
-FROM python:3.8 AS signals-classification-train
-
-ENV PYTHONUNBUFFERED 1
-
-WORKDIR /app
-
-RUN useradd --no-create-home classification
+FROM signals-classification-base AS signals-classification-train
 
 COPY app /app
 COPY requirements-train.txt /app/requirements-train.txt
