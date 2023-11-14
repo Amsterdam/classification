@@ -1,4 +1,4 @@
-FROM amsterdam/python
+FROM amsterdam/python AS signals-classification-web
 MAINTAINER datapunt@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
@@ -25,3 +25,29 @@ ENV UWSGI_OFFLOAD_THREADS 1
 ENV UWSGI_HARAKIRI 25
 
 CMD uwsgi
+
+
+FROM amsterdam/python AS signals-classifcation-train
+
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /app
+
+RUN useradd --no-create-home classification
+
+COPY app /app
+COPY requirements-train.txt /app/requirements-train.txt
+
+RUN set -eux; \
+    pip install --no-cache -r /app/requirements-train.txt; \
+    chgrp classification /app; \
+    chmod g+w /app;
+
+RUN set -eux; \
+    mkdir -p /nltk /output; \
+    chown classification /nltk; \
+    chown classification /output;
+
+ENV NLTK_DATA /nltk
+
+USER classification
