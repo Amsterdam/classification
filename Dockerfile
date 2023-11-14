@@ -26,7 +26,7 @@ ENV UWSGI_HARAKIRI 25
 CMD uwsgi
 
 
-FROM amsterdam/python AS signals-classifcation-train
+FROM amsterdam/python AS signals-classification-train
 
 ENV PYTHONUNBUFFERED 1
 
