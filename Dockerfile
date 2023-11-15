@@ -2,7 +2,7 @@ FROM python:3.8 AS signals-classification-base
 
 ENV PYTHONUNBUFFERED 1
 
-RUN useradd --no-create-home classification
+RUN adduser classification
 
 WORKDIR /app
 
