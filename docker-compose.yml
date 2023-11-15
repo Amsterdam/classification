@@ -1,15 +1,22 @@
-version: '3.0'
-services:
+version: '3.4'
 
+services:
   web:
-    build: .
+    image: amsterdam/signals-classification
+    build:
+      context: .
+      target: signals-classification-web
+    environment:
+      - SIGNALS_CATEGORY_URL=${SIGNALS_CATEGORY_URL}
+      - MODELS_DIRECTORY=${MODELS_DIRECTORY}
     ports:
       - "8140:8000"
 
   train:
+    image: amsterdam/signals-classification-train
     build:
       context: .
-      dockerfile: train.dockerfile
+      target: signals-classification-train
     volumes:
       - ./app:/app
       - ./input:/input
