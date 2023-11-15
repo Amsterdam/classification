@@ -11,6 +11,9 @@ services:
       - MODELS_DIRECTORY=${MODELS_DIRECTORY}
     ports:
       - "8140:8000"
+    volumes:
+      - ./app:/app
+      - ./models:/models
 
   train:
     image: amsterdam/signals-classification-train
@@ -20,5 +23,4 @@ services:
     volumes:
       - ./app:/app
       - ./input:/input
-      - ./nltk/data:/nltk/data
       - ./output:/output

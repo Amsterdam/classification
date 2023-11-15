@@ -34,15 +34,14 @@ COPY app /app
 COPY requirements-train.txt /app/requirements-train.txt
 
 RUN set -eux; \
-    pip install --no-cache -r /app/requirements-train.txt; \
-    chgrp classification /app; \
-    chmod g+w /app;
+    pip install --no-cache -r /app/requirements-train.txt
 
 RUN set -eux; \
-    mkdir -p /nltk /output; \
-    chown classification /nltk; \
-    chown classification /output;
+    mkdir -p /nltk; \
+    chown classification /nltk
 
 ENV NLTK_DATA /nltk
 
 USER classification
+
+ENTRYPOINT ["python", "train.py"]

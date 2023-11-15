@@ -46,9 +46,6 @@ coverage.xml
 
 # Django stuff:
 *.log
-api/app/signals/settings/local.py
-api/media
-api/static
 
 # Sphinx documentation
 docs/_build/
@@ -108,35 +105,10 @@ Global/Linux.gitignore
 
 ## Directory-based project format:
 .idea/
-# if you remove the above rule, at least ignore the following:
-
-# User-specific stuff:
-# .idea/workspace.xml
-# .idea/tasks.xml
-# .idea/dictionaries
-
-# Sensitive or high-churn files:
-# .idea/dataSources.ids
-# .idea/dataSources.xml
-# .idea/sqlDataSources.xml
-# .idea/dynamic.xml
-# .idea/uiDesigner.xml
-
-# Gradle:
-# .idea/gradle.xml
-# .idea/libraries
-
-# Mongo Explorer plugin:
-# .idea/mongoSettings.xml
 
 ## File-based project format:
 *.ipr
 *.iws
-
-## Plugin-specific files:
-
-# IntelliJ
-out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -182,13 +154,6 @@ Global/NetBeans.gitignore
 .mypy_cache/
 notes/
 
-# bind mount should be ignored
-dwh_media/
-input/
-nltk/
-output/
-
 *.pid
 *.lock
 *.env
-dex/dex-data/dex.db
