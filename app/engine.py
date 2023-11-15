@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
@@ -130,7 +131,7 @@ class TextClassifier:
         return grid_search
     
     def validate_model(self, test_texts, test_labels, dst_file, dst_csv, dst_validation=None):
-        from sklearn.metrics import precision_score, recall_score, accuracy_score, plot_confusion_matrix
+        from sklearn.metrics import precision_score, recall_score, accuracy_score
         import matplotlib.pyplot as plt
 
         test_predict = self.model.predict(test_texts)
@@ -139,7 +140,7 @@ class TextClassifier:
         accuracy = str(round(accuracy_score(test_labels, test_predict),2))
 
         plt.rcParams["figure.figsize"] = (30,30)
-        disp = plot_confusion_matrix(
+        disp = ConfusionMatrixDisplay.from_estimator(
             self.model,
             test_texts,
             test_labels,
