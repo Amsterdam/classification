@@ -6,7 +6,6 @@ from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from nltk.stem.snowball import DutchStemmer
 import joblib
-import warnings
 import nltk
 import re
 import csv
