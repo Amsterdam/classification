@@ -10,17 +10,18 @@ def parse_args():
     optional.add_argument('--columns', default='')
     optional.add_argument('--fract', default=1.0, type=float)
     optional.add_argument('--output-validation', const=True, nargs="?", default=False, type=bool)
+    optional.add_argument('--output', default='/app/output')
     parser._action_groups.append(optional)
     return parser.parse_args()
 
-def train(df, columns, output_validation=False):
+def train(df, columns, output, output_validation=False):
     texts, labels, train_texts, train_labels, test_texts, test_labels = classifier.make_data_sets(df, columns=columns)
     colnames = "_".join(columns).lower()
-    df.to_csv(f"/output/{colnames}_dl.csv", mode='w', columns=['Text','Label'], index=False)
+    df.to_csv(f"{output}/{colnames}_dl.csv", mode='w', columns=['Text','Label'], index=False)
     print(f"Training... for columns: {colnames}")
     model = classifier.fit(train_texts, train_labels)
     print("Serializing model to disk...")
-    classifier.export_model(f"/output/{colnames}_model.pkl")
+    classifier.export_model(f"{output}/{colnames}_model.pkl")
 
     if len(columns) > 1:
         categories = [
@@ -38,15 +39,15 @@ def train(df, columns, output_validation=False):
             for category in model.classes_
         ]
     print(slugs)
-    classifier.pickle(slugs, f"/output/{colnames}_slugs.pkl")
-    
+    classifier.pickle(slugs, f"{output}/{colnames}_slugs.pkl")
+
     print("Validating model")
     test_predict, precision, recall, accuracy = classifier.validate_model(
         test_texts,
         test_labels,
-        f"/output/{colnames}-matrix.pdf",
-        f"/output/{colnames}-matrix.csv",
-        dst_validation = f"/output/{colnames}_validation.csv" if output_validation else None)
+        f"{output}/{colnames}-matrix.pdf",
+        f"{output}/{colnames}-matrix.csv",
+        dst_validation = f"{output}/{colnames}_validation.csv" if output_validation else None)
     print('Precision', precision)
     print('Recall', recall)
     print('Accuracy', accuracy)
@@ -67,4 +68,4 @@ if __name__ == '__main__':
     columns = args.columns or 'Main'
     print("Training using category column(s): {}".format(columns))
     # train sub cat
-    train(df, columns.split(','), args.output_validation)
+    train(df, columns.split(','), args.output, args.output_validation)
