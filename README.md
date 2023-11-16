@@ -26,8 +26,8 @@ The `CSV` input file must have at least the following columns:
 | column      | description        |
 |-------------|--------------------|
 | Text        | message            |
-| Main        | Main category name |
-| Sub         | Sub category name  |
+| Main        | Main category slug |
+| Sub         | Sub category slug  |
 
 The columns must be in the order `Text,Main,Sub`, no header is required.
 
@@ -45,16 +45,16 @@ to verify the accuracy of the model in the form of a
 The files will be saved in the `ouput/` directory.
 
 In the example above this would result in:
-- `/output/Main_model.pkl`
-- `/output/Main_labels.pkl`
-- `/output/Main_dl.csv`
-- `/output/Main-matrix.csv`
-- `/output/Main-matrix.pdf`
-- `/output/Main_Sub_model.pkl`
-- `/output/Main_Sub_labels.pkl`
-- `/output/Main_Sub_dl.csv`
-- `/output/Main_Sub-matrix.csv`
-- `/output/Main_Sub-matrix.pdf`
+- `/output/main_model.pkl`
+- `/output/main_labels.pkl`
+- `/output/main_dl.csv`
+- `/output/main-matrix.csv`
+- `/output/main-matrix.pdf`
+- `/output/main_sub_model.pkl`
+- `/output/main_sub_labels.pkl`
+- `/output/main_sub_dl.csv`
+- `/output/main_sub-matrix.csv`
+- `/output/main_sub-matrix.pdf`
 
 # Running service
 The service is a standalone API built on the [Flask](https://flask.palletsprojects.com) framework. In order for it to
@@ -62,12 +62,12 @@ be able to use the model that was trained the pickle files are required.
 Copy the pickle files listed below into the `/models` directory or the directory you have configured through the
 `MODELS_DIRECTORY` environmental variable.
 
-| output/             | models/        | description             |
-|---------------------|----------------|-------------------------|
-| Main_model.pkl      | main_model.pkl | model for main category |
-| Main_Sub_model.pkl  | sub_model.pkl  | model for sub category  |
-| Main_labels.pkl     | main_slugs.pkl | slugs for main category |
-| Main_Sub_labels.pkl | sub_slugs.pkl  | slugs for sub category  |
+| output/            | models/        | description             |
+|--------------------|----------------|-------------------------|
+| main_model.pkl     | main_model.pkl | model for main category |
+| main_sub_model.pkl | sub_model.pkl  | model for sub category  |
+| main_slugs.pkl     | main_slugs.pkl | slugs for main category |
+| main_sub_slugs.pkl | sub_slugs.pkl  | slugs for sub category  |
 
 In order for the API to produce useful results for the signals application, it is important to provide a base url for
 the backend portion of the application. This can be achieved by setting the environmental variable
