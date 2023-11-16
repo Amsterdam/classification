@@ -26,7 +26,7 @@ class TextClassifier:
             self._init_model(load_from_disk)
 
     def _init_lookup(self):
-        nltk.download('stopwords')
+        nltk.download('stopwords', raise_on_error=True)
         # init stemmer
         self.stemmer=DutchStemmer(ignore_stopwords=True)
         self.stop_words = set(nltk.corpus.stopwords.words('dutch'))
