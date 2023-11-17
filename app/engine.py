@@ -66,6 +66,12 @@ class TextClassifier:
         # construct unique label
         df[self._lbl] = df[self._main] + "|" + "|" + df[self._sub]
 
+        number_of_examples = df[self._lbl].value_counts().to_frame()
+        df['is_bigger_than_50'] = df[self._lbl].isin(number_of_examples[number_of_examples[self._lbl]>50].index)
+        df['is_bigger_than_50'].value_counts()
+        df = df[df['is_bigger_than_50'] == True]
+        # The example dataset is not large enough to train a good classification model
+        # print(len(self.df),'rows valid')
         return df
 
     def make_data_sets(self, df, split=0.9, columns=None):
