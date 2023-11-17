@@ -19,7 +19,6 @@ optional = true
 
 [tool.poetry.group.train.dependencies]
 matplotlib = "^3.8.1"
-django = "^3.2"
 
 [tool.poetry.group.web]
 optional = true
