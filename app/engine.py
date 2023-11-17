@@ -28,8 +28,8 @@ class TextClassifier:
     def _init_lookup(self):
         nltk.download('stopwords', raise_on_error=True)
         # init stemmer
-        self.stemmer=DutchStemmer(ignore_stopwords=True)
-        self.stop_words = set(nltk.corpus.stopwords.words('dutch'))
+        self.stemmer = DutchStemmer(ignore_stopwords=True)
+        self.stop_words = nltk.corpus.stopwords.words('dutch')
 
     def _init_model(self, file):
         self.model = joblib.load(file) 
