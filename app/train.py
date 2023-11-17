@@ -1,4 +1,5 @@
 import argparse
+
 from engine import TextClassifier
 
 
@@ -7,21 +8,39 @@ def parse_args():
     optional = parser._action_groups.pop() 
     required = parser.add_argument_group('required arguments')
     required.add_argument('--csv', required=True)
-    optional.add_argument('--columns', default='')
+    optional.add_argument('--columns', default='Main')
     optional.add_argument('--fract', default=1.0, type=float)
     optional.add_argument('--output-validation', const=True, nargs="?", default=False, type=bool)
     optional.add_argument('--output', default='/app/output')
     parser._action_groups.append(optional)
-    return parser.parse_args()
 
-def train(df, columns, output, output_validation=False):
+    args = parser.parse_args()
+
+    print('Arguments given:')
+    for arg, value in vars(args).items():
+        print(f'  {arg}: {value}')
+    print('')
+
+    return args
+
+def train(csv_file, columns, output, output_validation=False):
+    classifier = TextClassifier()
+
+    df = classifier.load_data(csv_file=csv_file, frac=args.fract)
+    if not len(df):
+        print(f'Failed to load data from "{csv_file}"')
+        return
+
+    print(f'{len(df)} rows loaded')
+
     texts, labels, train_texts, train_labels, test_texts, test_labels = classifier.make_data_sets(df, columns=columns)
-    colnames = "_".join(columns).lower()
-    df.to_csv(f"{output}/{colnames}_dl.csv", mode='w', columns=['Text','Label'], index=False)
-    print(f"Training... for columns: {colnames}")
+
+    column_names = "_".join(columns).lower()
+    df.to_csv(f"{output}/{column_names}_dl.csv", mode='w', columns=['Text','Label'], index=False)
+
     model = classifier.fit(train_texts, train_labels)
-    print("Serializing model to disk...")
-    classifier.export_model(f"{output}/{colnames}_model.pkl")
+
+    classifier.export_model(f"{output}/{column_names}_model.pkl")
 
     if len(columns) > 1:
         categories = [
@@ -38,34 +57,17 @@ def train(df, columns, output, output_validation=False):
             f"/categories/{category}"
             for category in model.classes_
         ]
-    print(slugs)
-    classifier.pickle(slugs, f"{output}/{colnames}_slugs.pkl")
+    classifier.pickle(slugs, f"{output}/{column_names}_slugs.pkl")
 
-    print("Validating model")
-    test_predict, precision, recall, accuracy = classifier.validate_model(
-        test_texts,
-        test_labels,
-        f"{output}/{colnames}-matrix.pdf",
-        f"{output}/{colnames}-matrix.csv",
-        dst_validation = f"{output}/{colnames}_validation.csv" if output_validation else None)
-    print('Precision', precision)
-    print('Recall', recall)
-    print('Accuracy', accuracy)
+    classifier.validate_model(
+        test_texts=test_texts,
+        test_labels=test_labels,
+        dst_file=f"{output}/{column_names}-matrix.pdf",
+        dst_csv=f"{output}/{column_names}-matrix.csv",
+        dst_validation = f"{output}/{column_names}_validation.csv" if output_validation else None
+    )
 
 
 if __name__ == '__main__':
     args = parse_args()
-    print("Using args: {}".format(args))
-
-    classifier = TextClassifier()
-    df = classifier.load_data(csv_file=args.csv, frac=args.fract)
-    if len(df) == 0:
-        print("Failed to load {}".format(args.csv))
-        exit(-1)
-    else:
-        print("{} rows loaded".format(len(df)))
-    texts, labels, train_texts, train_labels, test_texts, test_labels = classifier.make_data_sets(df)
-    columns = args.columns or 'Main'
-    print("Training using category column(s): {}".format(columns))
-    # train sub cat
-    train(df, columns.split(','), args.output, args.output_validation)
+    train(args.csv, args.columns.split(','), args.output, args.output_validation)
