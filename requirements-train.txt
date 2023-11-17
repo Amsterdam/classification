@@ -1,8 +1,0 @@
-joblib==0.15.1
-matplotlib
-nltk==3.5
-numpy==1.18.5
-pandas==1.0.4
-python-dateutil==2.8.1
-scikit-learn==1.0.2
-psutil==5.7.0

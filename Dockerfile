@@ -1,22 +1,24 @@
-FROM python:3.8 AS signals-classification-base
+FROM python:3.11 AS signals-classification-base
 
 ENV PYTHONUNBUFFERED 1
 
-RUN adduser classification
+RUN set -eux; \
+    curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python3; \
+    cd /usr/local/bin; \
+    ln -s /opt/poetry/bin/poetry; \
+    poetry config virtualenvs.create false; \
+    poetry completions bash >> ~/.bash_completion
+
+COPY . /app
 
 WORKDIR /app
 
 
 FROM signals-classification-base AS signals-classification-web
 
-RUN mkdir -p /static && chown classification /static
+RUN poetry install --with web
 
-COPY app /app/
-COPY requirements.txt /app/
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-USER classification
+WORKDIR /app/app
 
 ENV UWSGI_HTTP :8000
 ENV UWSGI_MODULE app:application
@@ -30,18 +32,10 @@ CMD uwsgi
 
 FROM signals-classification-base AS signals-classification-train
 
-COPY app /app
-COPY requirements-train.txt /app/requirements-train.txt
+RUN mkdir /tmp/nltk
 
-RUN set -eux; \
-    pip install --no-cache -r /app/requirements-train.txt
+ENV NLTK_DATA /tmp/nltk
 
-RUN set -eux; \
-    mkdir -p /nltk; \
-    chown classification /nltk
+RUN poetry install --with train
 
-ENV NLTK_DATA /nltk
-
-USER classification
-
-ENTRYPOINT ["python", "train.py"]
+ENTRYPOINT ["python", "app/train.py"]

@@ -6,7 +6,6 @@ from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from nltk.stem.snowball import DutchStemmer
 import joblib
-import warnings
 import nltk
 import re
 import csv
@@ -27,10 +26,10 @@ class TextClassifier:
             self._init_model(load_from_disk)
 
     def _init_lookup(self):
-        nltk.download('stopwords')
+        nltk.download('stopwords', raise_on_error=True)
         # init stemmer
-        self.stemmer=DutchStemmer(ignore_stopwords=True)
-        self.stop_words = set(nltk.corpus.stopwords.words('dutch'))
+        self.stemmer = DutchStemmer(ignore_stopwords=True)
+        self.stop_words = nltk.corpus.stopwords.words('dutch')
 
     def _init_model(self, file):
         self.model = joblib.load(file) 
