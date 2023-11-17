@@ -1,37 +1,43 @@
-import json
-
-from flask import Flask, jsonify
+from classifier import main_model_classify_text, sub_model_classify_text
+from flask import Flask, request
 from flask_cors import CORS
-from flask import request
-
-from MoraCategoryClassifier import MoraCategoryClassifier
+from settings import TOP_N_PREDICTIONS
 
 application = Flask(__name__)
 CORS(application)
-ml_models = MoraCategoryClassifier()
 
 
-
-@application.route('/health', methods=['GET'])
+@application.get('/health')
 def pong():
-    return jsonify({
+    """
+    Check to see the health of the application, confirming if it is up and running
+    """
+    return {
         'health': 'awesome'
-    })
+    }
 
 
-@application.route('/signals_mltool/predict', methods=['POST'])
+@application.post('/signals_mltool/predict')
 def predict():
-    query = json.loads(request.data)['text']
+    """
+    Endpoint for predicting main and sub categories based on input text.
 
-    pred_hoofdrubriek = ml_models.classifyAllCategoriesWithProbability(query)
-    pred_subrubriek = ml_models.classifyAllSubCategoriesWithProbability(query)
+    This endpoint takes an input text from the request body and predicts the main and sub categories. The top X
+    categories along with their probabilities are returned in the response.
+    """
+    main_category_urls, main_probs = main_model_classify_text(text=request.json['text'], top_n=TOP_N_PREDICTIONS)
+    sub_category_urls, sub_probs = sub_model_classify_text(text=request.json['text'], top_n=TOP_N_PREDICTIONS)
 
-    # return bad request if we are configured incorrectly
-    if not pred_hoofdrubriek or not pred_subrubriek:
-        return jsonify({'errors': 'Misconfigured ML endpoint'}), 400
-
-    return jsonify({'hoofdrubriek': list(pred_hoofdrubriek),
-                    'subrubriek': list(pred_subrubriek)})
+    return {
+        'hoofdrubriek': [
+            main_category_urls,
+            main_probs,
+        ],
+        'subrubriek': [
+            sub_category_urls,
+            sub_probs,
+        ],
+    }
 
 
 if __name__ == '__main__':

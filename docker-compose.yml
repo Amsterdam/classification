@@ -7,8 +7,10 @@ services:
       context: .
       target: signals-classification-web
     environment:
+      - LOG_LEVEL=${LOG_LEVEL}
       - SIGNALS_CATEGORY_URL=${SIGNALS_CATEGORY_URL}
       - MODELS_DIRECTORY=${MODELS_DIRECTORY}
+      - TOP_N_PREDICTIONS=${TOP_N_PREDICTIONS}
     ports:
       - "8140:8000"
     volumes:
