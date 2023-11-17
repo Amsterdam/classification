@@ -32,7 +32,7 @@ class TextClassifier:
     _sub = 'Sub'
     _lbl = 'Label'
 
-    def __init__(self, model_from_disk=None):
+    def __init__(self):
         """
         Initialize the TextClassifier instance.
 
@@ -40,20 +40,14 @@ class TextClassifier:
         - model_from_disk (str or None): The path to a pre-existing model file on disk.
           If provided, the model will be loaded from the specified file during initialization.
         """
+        self.model = None
+
         # Download stop words
         nltk.download('stopwords', raise_on_error=True)
 
         # Initialize the Dutch stemmer with optional stop word removal
         self.stemmer = DutchStemmer(ignore_stopwords=True)
         self.stop_words = nltk.corpus.stopwords.words('dutch')
-
-        # Load the model from disk if a path is given
-        self.model = None
-        if model_from_disk:
-            model_file = Path(model_from_disk)
-            if model_file.exists():
-                # Load the model from the specified file
-                self.model = joblib.load(model_file)
 
 
     def pickle(self, obj, file):
