@@ -2,6 +2,8 @@ import csv
 import json
 import logging
 import re
+from pathlib import Path
+from typing import Any
 
 import joblib
 import pandas as pd
@@ -34,10 +36,6 @@ class TextClassifier:
     def __init__(self):
         """
         Initialize the TextClassifier instance.
-
-        Parameters:
-        - model_from_disk (str or None): The path to a pre-existing model file on disk.
-          If provided, the model will be loaded from the specified file during initialization.
         """
         self.model = None
 
@@ -49,37 +47,46 @@ class TextClassifier:
         self.stop_words = nltk.corpus.stopwords.words('dutch')
 
 
-    def pickle(self, obj, file):
+    def pickle(self, obj: Any, file: str | Path):
         """
         Serialize and save an object to a file using joblib.
 
-        Parameters:
-        - obj: The object to be serialized and saved.
-        - file (str or Path): The file path where the object will be saved.
+        Parameters
+        ----------
+        obj : obj
+            The object to be serialized and saved.
+        file : str, Path
+            The file path where the object will be saved.
         """
         logger.info(f'Pickling "{type(obj).__name__}" to "{file}"')
         joblib.dump(obj, file)
 
-    def export_model(self, file):
+    def export_model(self, file: str | Path):
         """
         Export the trained model to a file using joblib.
 
-        Parameters:
-        - file (str or Path): The file path where the model will be saved.
+        Parameters
+        ----------
+        file : str, Path
+            The file path where the model will be saved.
         """
         logger.info(f'Serializing model to "{file}"')
         joblib.dump(self.model, file)
 
-    def preprocessor(self, text):
+    def preprocessor(self, text: str) -> str:
         """
         Preprocess the input text by converting it to lowercase, removing special characters,
         and applying stemming to each word.
 
-        Parameters:
-        - text (str): The input text to be preprocessed.
+        Parameters
+        ----------
+        text : str
+            The input text to be preprocessed.
 
-        Returns:
-        str: The preprocessed text.
+        Returns
+        -------
+        str
+            The preprocessed text.
         """
         # Convert the text to lowercase
         text = text.lower()
@@ -97,16 +104,21 @@ class TextClassifier:
             for word in words
         ])
 
-    def load_data(self, csv_file, frac=1):
+    def load_data(self, csv_file: str | Path, frac: float = 1) -> pd.DataFrame:
         """
         Load and preprocess data from a CSV file.
 
-        Parameters:
-        - csv_file (str or Path): The path to the CSV file containing the data.
-        - frac (float): Fraction of the dataset to load. Default is 1, meaning the entire dataset.
+        Parameters
+        ----------
+        csv_file : str, Path
+            The path to the CSV file containing the data.
+        frac : float
+            Fraction of the dataset to load. Default is 1, meaning the entire dataset.
 
-        Returns:
-        pd.DataFrame: A preprocessed DataFrame containing the loaded data.
+        Returns
+        -------
+        pd.DataFrame
+            A preprocessed DataFrame containing the loaded data.
         """
         # Read data from CSV file into a DataFrame
         df = pd.read_csv(csv_file, sep=None, engine='python')
@@ -139,23 +151,36 @@ class TextClassifier:
 
         return df
 
-    def make_data_sets(self, df, split=0.9, columns=None):
+    def make_data_sets(self, df: pd.DataFrame, split: float = 0.9, columns: list[str] = None) \
+            -> tuple[pd.Series, pd.Series, pd.Series, pd.Series, pd.Series, pd.Series]:
         """
         Create train and test datasets from a pandas DataFrame.
 
-        Parameters:
-        - df (pd.DataFrame): The DataFrame containing the data.
-        - split (float): The fraction of the data to be used for testing. Default is 0.9, meaning 90% training and 10% testing.
-        - columns (list or None): The list of columns to be used for labels. If None, default columns [self._main, self._sub] are used.
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The DataFrame containing the data.
+        split : float, optional
+            The fraction of the data to be used for testing. Default is 0.9, meaning 90% training and 10% testing.
+        columns : list of str, optional
+            The list of columns to be used for labels. If None, default columns [self._main, self._sub] are used.
 
-        Returns:
-        tuple: A tuple containing train and test datasets:
-        - texts (pd.Series): The text data.
-        - labels (pd.Series): The labels.
-        - train_texts (pd.Series): The training text data.
-        - train_labels (pd.Series): The training labels.
-        - test_texts (pd.Series): The testing text data.
-        - test_labels (pd.Series): The testing labels.
+        Returns
+        -------
+        tuple:
+            A tuple containing train and test datasets:
+            - texts : pd.Series
+                The text data.
+            - labels : pd.Series
+                The labels.
+            - train_texts : pd.Series
+                The training text data.
+            - train_labels : pd.Series
+                The training labels.
+            - test_texts : pd.Series
+                The testing text data.
+            - test_labels : pd.Series
+                The testing labels.
         """
         # If columns are not provided, use default columns [self._main, self._sub]
         columns = columns or [self._main, self._sub]
@@ -174,16 +199,23 @@ class TextClassifier:
 
         return texts, labels, train_texts, train_labels, test_texts, test_labels
 
-    def fit(self, train_texts, train_labels, optimized_parameters=True):
+    def fit(self, train_texts: pd.Series, train_labels: pd.Series, optimized_parameters: bool = True) -> GridSearchCV:
         """
         Fit a logistic regression model using text data and labels.
 
-        Parameters:
-        - train_texts (pd.Series): The training text data.
-        - train_labels (pd.Series): The training labels.
+        Parameters
+        ----------
+        train_texts : pd.Series
+            The training text data.
+        train_labels : pd.Series
+            The training labels.
+        optimized_parameters: bool
+            Flag to switch between optimized (slower) or non optimized (faster) parameters.
 
-        Returns:
-        sklearn.model_selection.GridSearchCV: The fitted grid search model.
+        Returns
+        -------
+        GridSearchCV
+            The fitted grid search model.
         """
         # Define a pipeline with text vectorization and logistic regression
         pipeline = Pipeline([
@@ -241,17 +273,24 @@ class TextClassifier:
         logger.info('Grid search completed')
         return grid_search
     
-    def validate_model(self, test_texts, test_labels, dst_file, dst_csv, dst_validation=None):
+    def validate_model(self, test_texts: pd.Series, test_labels: pd.Series,
+                       dst_file: str | Path, dst_csv: str | Path, dst_validation: str | Path = None):
         """
         Validate the trained model using test data and generate evaluation metrics, a confusion matrix plot,
         and optional detailed validation results.
 
-        Parameters:
-        - test_texts (pd.Series): The testing text data.
-        - test_labels (pd.Series): The true labels for the testing data.
-        - dst_file (str or Path): The file path to save the confusion matrix plot.
-        - dst_csv (str or Path): The file path to save the confusion matrix CSV.
-        - dst_validation (str or None): The file path to save detailed validation results (optional).
+        Parameters
+        ----------
+        test_texts : pd.Series
+            The testing text data.
+        test_labels : pd.Series
+            The true labels for the testing data.
+        dst_file : str or Path
+            The file path to save the confusion matrix plot.
+        dst_csv : str or Path
+            The file path to save the confusion matrix CSV.
+        dst_validation : str, optional
+            The file path to save detailed validation results (optional).
         """
         import matplotlib.pyplot as plt
         from sklearn.metrics import (accuracy_score, precision_score,
