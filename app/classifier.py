@@ -1,10 +1,13 @@
 import logging
 import os
 from functools import partial
+from pathlib import Path
+from typing import Any
 
 import joblib
 import numpy as np
 from settings import LOG_LEVEL, MODELS_DIRECTORY, SIGNALS_CATEGORY_URL
+from sklearn.model_selection import GridSearchCV
 
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s %(name)s %(levelname)-4s %(message)s'))
@@ -14,20 +17,21 @@ logger.setLevel(level=LOG_LEVEL)
 logger.addHandler(handler)
 
 
-def load_pickle(file_path):
+def load_pickle(file_path: str | Path) -> Any:
     """
     Load a pickled file from the given file path.
 
-    Args:
-    - file_path (str):
+    Note: If the file does not exist, an error is logged, and None is returned.
+
+    Parameters
+    ----------
+    file_path : str
         The path to the pickled file.
 
-    Returns:
-    - object :
+    Returns
+    -------
+    object : any
         The unpickled object loaded from the file.
-
-    Note:
-    - If the file does not exist, an error is logged, and None is returned.
     """
     if not os.path.exists(file_path):
         logger.error(f'File does not exists "{file_path}"')
@@ -35,27 +39,27 @@ def load_pickle(file_path):
         # Load and return the pickled object
         return joblib.load(file_path)
 
-def classify_text(text, model, categories, top_n=100):
+def classify_text(text: str, model: GridSearchCV, categories: list[str], top_n: int = 100) -> tuple[list[str], list[float]]:
     """
     Get the top categories and their associated probabilities for a given text.
 
     Parameters
     ----------
-    text (str): str
+    text : str
         The input text for which categories and probabilities are to be predicted.
-    model (classifier object):
+    model : GridSearchCV
         A trained classifier model with a `predict_proba` method.
-    categories (list):
+    categories : list
         A list of category labels.
-    top_n (int, optional):
+    top_n : int, optional
         Number of top categories to retrieve, default is 100.
 
     Returns
     -------
-    top_category_urls : list of str
-        List of URLs for the top categories.
-    sorted_probs : list of float
-        List of probabilities sorted in descending order.
+    tuple
+        A tuple containing two elements:
+        - List of URLs for the top categories.
+        - List of probabilities sorted in descending order.
     """
     # Predict probabilities for the given text
     proba_predictions = model.predict_proba([text, ])
