@@ -29,6 +29,13 @@ flask-cors = "^4.0.0"
 numpy = "^1.26.2"
 uwsgi = "^2.0.23"
 
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
