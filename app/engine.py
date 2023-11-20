@@ -293,8 +293,7 @@ class TextClassifier:
             The file path to save detailed validation results (optional).
         """
         import matplotlib.pyplot as plt
-        from sklearn.metrics import (accuracy_score, precision_score,
-                                     recall_score)
+        from sklearn.metrics import accuracy_score, precision_score, recall_score
 
         logger.info('Validating the generated model...')
 

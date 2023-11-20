@@ -110,3 +110,20 @@ As can be seen in the example response, a full url is given, while for the train
 provided. This happens because before the model is trained the category names are converted to slugs in the same way
 the signals application converts them. Subsequently, the url is constructed using the base url in the same way that the
 signals application constructs those urls.
+
+
+# Development
+
+## Code Formatting
+
+This project uses `isort` for import sorting. Before committing changes, run the following command to ensure correct import sorting:
+
+```bash
+poetry run isort .
+```
+
+Adding `--diff` and `--check-only` will not fix the found issues but instead show the proposed fixes that can be implemented.
+
+```bash
+poetry run isort --diff --check-only .
+```
