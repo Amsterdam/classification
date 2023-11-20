@@ -46,7 +46,6 @@ class TextClassifier:
         self.stemmer = DutchStemmer(ignore_stopwords=True)
         self.stop_words = nltk.corpus.stopwords.words('dutch')
 
-
     def pickle(self, obj: Any, file: str | Path):
         """
         Serialize and save an object to a file using joblib.
@@ -92,10 +91,10 @@ class TextClassifier:
         text = text.lower()
 
         # Remove special characters using regular expression
-        text = re.sub("\\W"," ",text)
+        text = re.sub("\\W", " ", text)
 
         # Split the text into words
-        words = re.split("\\s+",text)
+        words = re.split("\\s+", text)
 
         # Apply stemming to each word using the provided stemmer
         # and join the processed words back into a single string
@@ -145,9 +144,9 @@ class TextClassifier:
 
         # Filter out examples where the label occurs less than 50 times
         number_of_examples = df[self._lbl].value_counts().to_frame()
-        df['is_bigger_than_50'] = df[self._lbl].isin(number_of_examples[number_of_examples[self._lbl]>50].index)
+        df['is_bigger_than_50'] = df[self._lbl].isin(number_of_examples[number_of_examples[self._lbl] > 50].index)
         df['is_bigger_than_50'].value_counts()
-        df = df[df['is_bigger_than_50'] == True]
+        df = df[df['is_bigger_than_50'] == True]  # noqa E712
 
         return df
 
@@ -272,7 +271,7 @@ class TextClassifier:
 
         logger.info('Grid search completed')
         return grid_search
-    
+
     def validate_model(self, test_texts: pd.Series, test_labels: pd.Series,
                        dst_file: str | Path, dst_csv: str | Path, dst_validation: str | Path = None):
         """
@@ -334,7 +333,7 @@ class TextClassifier:
         # Save detailed validation results if specified
         if dst_validation:
             logger.info(f'Saving detailed validation results to "{dst_validation}"')
-            with open(dst_validation,'w') as csvfile:
+            with open(dst_validation, 'w') as csvfile:
                 fieldnames = ['Text', 'predicted_category', 'actual_category']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
                 writer.writeheader()

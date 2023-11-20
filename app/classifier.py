@@ -39,7 +39,9 @@ def load_pickle(file_path: str | Path) -> Any:
         # Load and return the pickled object
         return joblib.load(file_path)
 
-def classify_text(text: str, model: GridSearchCV, categories: list[str], top_n: int = 100) -> tuple[list[str], list[float]]:
+
+def classify_text(text: str, model: GridSearchCV, categories: list[str], top_n: int = 100) \
+        -> tuple[list[str], list[float]]:
     """
     Get the top categories and their associated probabilities for a given text.
 
