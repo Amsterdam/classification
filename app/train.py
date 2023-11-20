@@ -5,7 +5,7 @@ from engine import TextClassifier
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    optional = parser._action_groups.pop() 
+    optional = parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
     required.add_argument('--csv', required=True)
     optional.add_argument('--columns', default='Main')
@@ -23,6 +23,7 @@ def parse_args():
 
     return args
 
+
 def train(csv_file, columns, output, output_validation=False):
     classifier = TextClassifier()
 
@@ -36,7 +37,7 @@ def train(csv_file, columns, output, output_validation=False):
     texts, labels, train_texts, train_labels, test_texts, test_labels = classifier.make_data_sets(df, columns=columns)
 
     column_names = "_".join(columns).lower()
-    df.to_csv(f"{output}/{column_names}_dl.csv", mode='w', columns=['Text','Label'], index=False)
+    df.to_csv(f"{output}/{column_names}_dl.csv", mode='w', columns=['Text', 'Label'], index=False)
 
     model = classifier.fit(train_texts, train_labels)
 
@@ -64,7 +65,7 @@ def train(csv_file, columns, output, output_validation=False):
         test_labels=test_labels,
         dst_file=f"{output}/{column_names}-matrix.pdf",
         dst_csv=f"{output}/{column_names}-matrix.csv",
-        dst_validation = f"{output}/{column_names}_validation.csv" if output_validation else None
+        dst_validation=f"{output}/{column_names}_validation.csv" if output_validation else None
     )
 
 

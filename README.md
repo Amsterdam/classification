@@ -127,3 +127,12 @@ Adding `--diff` and `--check-only` will not fix the found issues but instead sho
 ```bash
 poetry run isort --diff --check-only .
 ```
+
+We also use `flake8` for code linting. Before committing changes, run the following command to ensure code
+compliance with PEP 8 style guidelines and identify potential issues:
+
+```bash
+poetry run flake8 .
+```
+
+Remember to address any identified issues before committing your changes.
