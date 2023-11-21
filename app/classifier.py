@@ -6,8 +6,9 @@ from typing import Any
 
 import joblib
 import numpy as np
-from settings import LOG_LEVEL, MODELS_DIRECTORY, SIGNALS_CATEGORY_URL
 from sklearn.model_selection import GridSearchCV
+
+from settings import LOG_LEVEL, MODELS_DIRECTORY, SIGNALS_CATEGORY_URL
 
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s %(name)s %(levelname)-4s %(message)s'))

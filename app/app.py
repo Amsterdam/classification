@@ -1,6 +1,7 @@
-from classifier import main_model_classify_text, sub_model_classify_text
 from flask import Flask, request
 from flask_cors import CORS
+
+from classifier import main_model_classify_text, sub_model_classify_text
 from settings import TOP_N_PREDICTIONS
 
 application = Flask(__name__)

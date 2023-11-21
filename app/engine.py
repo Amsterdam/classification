@@ -6,17 +6,17 @@ from pathlib import Path
 from typing import Any
 
 import joblib
+import nltk
 import pandas as pd
 import psutil
 from nltk.stem.snowball import DutchStemmer
-from settings import LOG_LEVEL
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.pipeline import Pipeline
 
-import nltk
+from settings import LOG_LEVEL
 
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(message)s'))
