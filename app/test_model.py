@@ -1,7 +1,6 @@
 import joblib
 import numpy as np
 
-
 if __name__ == '__main__':
     print('loading models...')
     sub_cat = joblib.load('sub_model.pkl')

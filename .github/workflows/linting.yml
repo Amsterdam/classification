@@ -1,0 +1,29 @@
+name: Linting
+on: [pull_request]
+
+jobs:
+  linting:
+    name: Run iSort and Flake8
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '>=3.11 <3.12'
+
+      - name: Install Poetry
+        run: |
+          pip install -U pip
+          pip install poetry
+          poetry -V
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run iSort
+        run: poetry run isort --diff --check-only ./app
+
+      - name: Run Flake8
+        run: poetry run flake8 ./app
