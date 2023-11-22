@@ -38,4 +38,4 @@ ENV NLTK_DATA /tmp/nltk
 
 RUN poetry install --with train
 
-ENTRYPOINT ["python", "app/train.py"]
+ENTRYPOINT ["python", "/app/app/train/run.py"]

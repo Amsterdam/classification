@@ -35,8 +35,8 @@ The columns must be in the order `Text,Main,Sub`, no header is required.
 To train the models place the csv file in the `input/` directory and run the following commands:
 
 ```shell
-docker-compose run --rm train --csv=/input/{name of csv file} --columns=Main
-docker-compose run --rm train --csv=/input/{name of csv file} --columns=Main,Sub
+docker-compose run --rm train --filepath=/input/{name of csv file} --columns=Main
+docker-compose run --rm train --filepath=/input/{name of csv file} --columns=Main,Sub
 ```
 
 This will produce a set of files pickled using [joblib](https://joblib.readthedocs.io) and some files that can be used
