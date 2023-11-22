@@ -104,7 +104,7 @@ if __name__ == "__main__":
     joblib.dump(category_paths,
                 filename=f"{args.output_dir}/"
                          f"{column_names}_slugs.pkl")
-    logging.info(f"Exported category paths to: {model_filepath}")
+    logging.info(f"Exported category paths to: {category_paths_filepath}")
 
     # Validation
     test_predict = grid_search.predict(test_texts)
