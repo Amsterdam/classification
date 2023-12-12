@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # https://github.com/actions/checkout
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       # https://github.com/docker/login-action
       - name: Log into Docker Hub
         if: github.event_name != 'pull_request'
