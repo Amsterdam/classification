@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   web:
-    image: amsterdam/signals-classification
+    image: amsterdam/classification
     build:
       context: .
       target: signals-classification-web
@@ -17,7 +17,7 @@ services:
       - .:/app
 
   train:
-    image: amsterdam/signals-classification-train
+    image: amsterdam/classification-train
     build:
       context: .
       target: signals-classification-train
