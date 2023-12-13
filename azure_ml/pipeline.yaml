@@ -1,0 +1,33 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: signals_classification
+description: Pipeline job with component using public docker image as environment
+
+settings:
+  default_compute: azureml:cpu-cluster
+
+inputs:
+  csv:
+    type: uri_file
+    path: ../input/ml.csv
+    mode: ro_mount
+
+jobs:
+  train_signals_classification_main_model:
+    type: command
+    component: ./component.yaml
+    inputs:
+      csv: ${{ parent.inputs.csv }}
+      columns: Main
+    outputs:
+      output:
+        mode: upload
+  train_signals_classification_main_sub_model:
+    type: command
+    component: ./component.yaml
+    inputs:
+      csv: ${{ parent.inputs.csv }}
+      columns: Main,Sub
+    outputs:
+      output:
+        mode: upload
