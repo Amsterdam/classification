@@ -1,0 +1,22 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: signals_classification_model
+display_name: Signals_Classification_Model
+version: 1
+
+is_deterministic: false
+
+inputs:
+  csv:
+    type: uri_file
+  columns:
+    type: string
+outputs:
+  output:
+    type: uri_folder
+
+environment:
+  image: amsterdam/classification-train
+
+command: python /app/app/train/run.py --filepath=${{ inputs.csv }} --output_dir=${{ outputs.output }} --columns=${{ inputs.columns }}
