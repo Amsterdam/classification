@@ -67,8 +67,8 @@ if __name__ == "__main__":
     for arg, value in vars(args).items():
         logging.info(f" {arg}: {value}")
 
-    # Downloading stopwords
-    nltk.download("stopwords", raise_on_error=True)
+    # Download NLTK data
+    nltk.download(raise_on_error=True)
     stop_words = nltk.corpus.stopwords.words("dutch")
 
     # pre processing data
