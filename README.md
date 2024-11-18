@@ -106,9 +106,7 @@ This should give a response with a body similar:
   ]
 }
 ```
-As can be seen in the example response, a full url is given, while for the training process only category names were
-provided. This happens because before the model is trained the category names are converted to slugs in the same way
-the signals application converts them. Subsequently, the url is constructed using the base url in the same way that the
+As can be seen in the example response, the url is constructed using the base url in the same way that the
 signals application constructs those urls.
 
 
