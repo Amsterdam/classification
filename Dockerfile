@@ -32,10 +32,10 @@ CMD uwsgi
 
 FROM signals-classification-base AS signals-classification-train
 
-RUN mkdir /tmp/nltk
-
-ENV NLTK_DATA /tmp/nltk
+ENV NLTK_DATA /usr/local/share/nltk_data
 
 RUN poetry install --with train
+
+RUN python -m nltk.downloader -d /usr/local/share/nltk_data stopwords
 
 ENTRYPOINT ["python", "/app/app/train/run.py"]
