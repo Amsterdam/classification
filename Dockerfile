@@ -22,12 +22,13 @@ WORKDIR /app/app
 
 ENV UWSGI_HTTP :8000
 ENV UWSGI_MODULE app:application
-ENV UWSGI_PROCESSES 8
+ENV UWSGI_PROCESSES 1
+ENV UWSGI_THREADS 4
 ENV UWSGI_MASTER 1
 ENV UWSGI_OFFLOAD_THREADS 1
 ENV UWSGI_HARAKIRI 25
 
-CMD ["uwsgi", "/app/uwsgi.ini"]
+CMD ["uwsgi"]
 
 
 FROM signals-classification-base AS signals-classification-train
