@@ -27,7 +27,7 @@ ENV UWSGI_MASTER 1
 ENV UWSGI_OFFLOAD_THREADS 1
 ENV UWSGI_HARAKIRI 25
 
-CMD uwsgi
+CMD ["uwsgi", "/app/uwsgi.ini"]
 
 
 FROM signals-classification-base AS signals-classification-train
