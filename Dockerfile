@@ -7,7 +7,8 @@ RUN set -eux; \
     cd /usr/local/bin; \
     ln -s /opt/poetry/bin/poetry; \
     poetry config virtualenvs.create false; \
-    poetry completions bash >> ~/.bash_completion
+    poetry completions bash >> ~/.bash_completion; \
+    poetry self add poetry-plugin-sort
 
 COPY . /app
 
