@@ -1,8 +1,9 @@
 name: Build a Docker image and push it to Dockerhub
-
 on:
   release:
     types: [ published ]
+permissions:
+  contents: read
 
 jobs:
   web:
