@@ -4,7 +4,7 @@ display_name: signals_classification
 description: Pipeline job with component using public docker image as environment
 
 settings:
-  default_compute: azureml:cpu-cluster
+  default_compute: azureml:sig-compute-ramon
 
 inputs:
   csv:
