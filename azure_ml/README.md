@@ -1,5 +1,5 @@
 # Training the models using Azure ML
-Training the models can take a very long time depending on the resources you have available on your machine.  
+Training the models can take a very long time depending on the resources you have available on your machine.
 It may be worth it to use an external service like [Azure ML](https://ml.azure.com/) to train them.
 
 In order to do just that this directory contains a pipeline definition and a script to make the process a bit easier.
@@ -34,7 +34,16 @@ values.
 ## How to train the models
 The pipeline will use the training container image that is published to Docker hub to perform the actual training.
 It is very important that the version of the training container matches the version of the classification web service.
-So make sure to use the latest version of both to be certain.
+Do not rely on an unpinned `latest` reference for Azure ML. Instead, update `component.yaml` to the released `linux/amd64`
+manifest digest for the training image.
+
+This matters because Azure ML is more reliable with a plain single-platform image manifest than with a top-level OCI image
+index that also contains provenance or attestation metadata. The GitHub release workflow publishes the training image in
+that simpler `linux/amd64` format so the digest you pin in `component.yaml` refers to the concrete runnable image Azure ML
+actually needs to pull.
+
+When a new release is published, copy the train image digest from Docker Hub or the GitHub Actions build output and update
+`component.yaml` to that digest so the Azure ML pipeline stays reproducible and does not drift with `latest`.
 
 To kick off a pipeline, simply run:
 ```shell
@@ -44,6 +53,6 @@ after that a new tab should automatically open in the browser, taking you to the
 
 Once they're both completed the files should be available in the workspace storage and can be downloaded there.
 The easiest way to locate them is to open the job details and to click on the "Data asset" link in the "Outputs"
-section.  
+section.
 That will take you to page with a section called "Data sources", which in turn has a listing of "Actions" that allow you
 to see the actual files.
