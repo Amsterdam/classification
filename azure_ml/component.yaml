@@ -17,6 +17,6 @@ outputs:
     type: uri_folder
 
 environment:
-  image: amsterdamsoftwareontwikkeling/classification-train
+  image: amsterdamsoftwareontwikkeling/classification-train:latest
 
 command: python /app/app/train/run.py --filepath=${{ inputs.csv }} --output_dir=${{ outputs.output }} --columns=${{ inputs.columns }}
