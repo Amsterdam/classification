@@ -34,16 +34,7 @@ values.
 ## How to train the models
 The pipeline will use the training container image that is published to Docker hub to perform the actual training.
 It is very important that the version of the training container matches the version of the classification web service.
-Do not rely on an unpinned `latest` reference for Azure ML. Instead, update `component.yaml` to the released `linux/amd64`
-manifest digest for the training image.
-
-This matters because Azure ML is more reliable with a plain single-platform image manifest than with a top-level OCI image
-index that also contains provenance or attestation metadata. The GitHub release workflow publishes the training image in
-that simpler `linux/amd64` format so the digest you pin in `component.yaml` refers to the concrete runnable image Azure ML
-actually needs to pull.
-
-When a new release is published, copy the train image digest from Docker Hub or the GitHub Actions build output and update
-`component.yaml` to that digest so the Azure ML pipeline stays reproducible and does not drift with `latest`.
+So make sure to use the latest version of both to be certain.
 
 To kick off a pipeline, simply run:
 ```shell
