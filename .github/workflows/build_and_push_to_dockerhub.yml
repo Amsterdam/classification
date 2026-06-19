@@ -92,11 +92,8 @@ jobs:
         with:
           context: .
           target: signals-classification-train
-          platforms: linux/amd64
           pull: true
-          provenance: false
           push: ${{ github.event_name != 'pull_request' }}
-          sbom: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

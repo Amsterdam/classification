@@ -63,8 +63,9 @@ def load_and_clean_data(filepath: str) -> pd.DataFrame:
     # Read the CSV file
     df = pd.read_csv(filepath)
 
-    # Rename columns for clarity
-    df.columns = ["main", "sub", "text"]
+    # Rename columns for clarity. Input files are expected in Text,Main,Sub
+    # order as documented in the README.
+    df.columns = ["text", "main", "sub"]
 
     # Drop rows with empty values (None or NaN) in specified columns
     df = df.dropna(
