@@ -76,6 +76,11 @@ def classify_text(text: str, model: GridSearchCV, categories: list[str], top_n: 
     # Create URLs for the top categories
     top_category_urls = [f'{SIGNALS_CATEGORY_URL}{categories[z]}' for z in top_indices]
 
+    logger.info(f'Top categories for text "{text}": {top_category_urls}')
+    logger.info(f'Top probabilities for text "{text}": {sorted_probs}')
+    print(f'Top categories for text "{text}": {top_category_urls}')
+    print(f'Top probabilities for text "{text}": {sorted_probs}')
+
     return top_category_urls, sorted_probs
 
 
